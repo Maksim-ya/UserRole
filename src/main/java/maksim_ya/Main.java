@@ -17,7 +17,7 @@ public class Main {
             session.beginTransaction();
             User user = new User();
             user.setAge(30);
-            user.setFirstname("Maksim");
+            user.setFirstname("Maxim");
             user.setLastname("Yakimets");
 
             session.save(user);

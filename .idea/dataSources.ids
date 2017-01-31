@@ -1527,6 +1527,17 @@
       <column name="viewowner" sqlType="name" precision="2147483647" scale="0" nullable="true" jdbcType="12"/>
       <column name="definition" sqlType="text" precision="2147483647" scale="0" nullable="true" jdbcType="12"/>
     </table>
+    <table name="all_users" schema="public" catalog="userRole" type="TABLE">
+      <column name="id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="age" sqlType="int4" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="first_name" sqlType="varchar" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="user_id" sqlType="int8" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="last_name" sqlType="varchar" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="all_users_pkey" columns="id"/>
+      <exported-key name="fk_mh40cn97o5svvy5c32ws9tnvp" table="order" schema="public" catalog="userRole" columns="user_id"/>
+      <exported-key name="fk_g1uebn6mqk9qiaw45vnacmyo2" table="user_roles" schema="public" catalog="userRole" columns="user_id"/>
+      <index name="uk_hgq0mq455a9qx42qmg7t8d44x" unique="true" columns="user_id"/>
+    </table>
     <table name="hibernate_sequence" schema="public" catalog="userRole" type="SEQUENCE">
       <column name="sequence_name" sqlType="name" precision="2147483647" scale="0" nullable="false" jdbcType="12"/>
       <column name="last_value" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
@@ -1539,26 +1550,46 @@
       <column name="is_cycled" sqlType="bool" precision="1" scale="0" nullable="false" jdbcType="-7"/>
       <column name="is_called" sqlType="bool" precision="1" scale="0" nullable="false" jdbcType="-7"/>
     </table>
+    <table name="order" schema="public" catalog="userRole" type="TABLE">
+      <column name="id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="count" sqlType="int4" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="price" sqlType="numeric" precision="19" scale="2" nullable="true" jdbcType="2"/>
+      <column name="status" sqlType="bool" precision="1" scale="0" nullable="true" jdbcType="-7"/>
+      <column name="product_id" sqlType="int8" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="user_id" sqlType="int8" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <primary-key name="order_pkey" columns="id"/>
+      <foreign-key name="fk_mh40cn97o5svvy5c32ws9tnvp" columns="user_id" ref-table="all_users" ref-schema="public" ref-catalog="" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_coujmwb5gah5m48g4084u48du" columns="product_id" ref-table="product" ref-schema="public" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
     <table name="product" schema="public" catalog="userRole" type="TABLE">
-      <column name="id" sqlType="int4" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="description" sqlType="varchar" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <column name="price" sqlType="numeric" precision="19" scale="2" nullable="true" jdbcType="2"/>
       <column name="title" sqlType="varchar" precision="255" scale="0" nullable="true" jdbcType="12"/>
-      <column name="parent_product_id" sqlType="int4" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="parent_product_id" sqlType="int8" precision="19" scale="0" nullable="true" jdbcType="-5"/>
       <primary-key name="product_pkey" columns="id"/>
       <foreign-key name="fk_7cxtnpk149r3moeey9qjtab5v" columns="parent_product_id" ref-table="product_category" ref-schema="public" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="fk_coujmwb5gah5m48g4084u48du" table="order" schema="public" catalog="userRole" columns="product_id"/>
     </table>
     <table name="product_category" schema="public" catalog="userRole" type="TABLE">
-      <column name="id" sqlType="int4" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="productcategory" sqlType="bytea" precision="2147483647" scale="0" nullable="true" jdbcType="-2"/>
       <column name="title" sqlType="varchar" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="product_category_pkey" columns="id"/>
       <exported-key name="fk_7cxtnpk149r3moeey9qjtab5v" table="product" schema="public" catalog="userRole" columns="parent_product_id"/>
     </table>
     <table name="role" schema="public" catalog="userRole" type="TABLE">
-      <column name="id" sqlType="int4" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="title" sqlType="varchar" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="role_pkey" columns="id"/>
+      <exported-key name="fk_5q4rc4fh1on6567qk69uesvyf" table="user_roles" schema="public" catalog="userRole" columns="role_id"/>
+    </table>
+    <table name="user_roles" schema="public" catalog="userRole" type="TABLE">
+      <column name="user_id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="role_id" sqlType="int8" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <primary-key name="user_roles_pkey" columns="user_id,role_id"/>
+      <foreign-key name="fk_g1uebn6mqk9qiaw45vnacmyo2" columns="user_id" ref-table="all_users" ref-schema="public" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_5q4rc4fh1on6567qk69uesvyf" columns="role_id" ref-table="role" ref-schema="public" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <procedure name="RI_FKey_cascade_del" schema="pg_catalog" catalog="userRole" type="2" remarks="cmVmZXJlbnRpYWwgaW50ZWdyaXR5IE9OIERFTEVURSBDQVNDQURF">
       <prototype>
